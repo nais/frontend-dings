@@ -47,3 +47,4 @@ yarn.lock
 dist
 
 .cache
+.env
