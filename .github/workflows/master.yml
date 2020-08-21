@@ -7,20 +7,11 @@ on:
 env:
   APP: frontend-dings
   TEAM: plattformsikkerhet
-  IMAGE: docker.pkg.github.com/${{ github.repository }}/frontend-dings
+  IMAGE: docker.pkg.github.com/${{ github.repository }}/frontend-dings:${{ github.sha }}
 
 jobs:
-  set_version:
-    runs-on: ubuntu-latest
-    steps:
-      - name: create docker tag
-        run: echo ::set-env name=TAG::$(echo ${{ github.sha }} | cut -c1-7)
-    outputs:
-      tag: ${{ env.TAG }}
-
   build:
     runs-on: ubuntu-latest
-    needs: set_version
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v1
@@ -45,11 +36,11 @@ jobs:
       - name: build docker image
         run: |
           npm prune --production
-          docker build . --pull -t ${{ env.IMAGE }}:${{ needs.set_version.outputs.tag }}
+          docker build . --pull -t ${{ env.IMAGE }}
       - name: push docker image
         run: |
           echo "$GITHUB_TOKEN" | docker login --username "$GITHUB_REPOSITORY" --password-stdin https://docker.pkg.github.com
-          docker push ${{ env.IMAGE }}:${{ needs.set_version.outputs.tag }}
+          docker push ${{ env.IMAGE }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
