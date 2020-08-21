@@ -50,6 +50,3 @@ spec:
       value: "{{this}}"
   {{/each}}
 
-  envFrom:
-    - secret: {{app}}-bearerauth
-    - secret: {{app}}-private-jwks
