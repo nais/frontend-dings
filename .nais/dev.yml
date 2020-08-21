@@ -4,6 +4,7 @@ team: plattformsikkerhet
 ingresses:
   - https://frontend-dings.dev-gcp.nais.io
 host:
+  - oidc.difi.no
   - oidc-ver2.difi.no
 env:
   NODE_ENV: production
