@@ -7,7 +7,7 @@ const app = {
 }
 
 const idporten = {
-    discoveryUrl: process.env.DISCOVERY_URL_IDPORTEN || "https://oidc.difi.no/idporten-oidc-provider/.well-known/openid-configuration",
+    discoveryUrl: process.env.DISCOVERY_URL_IDPORTEN || "https://oidc-ver2.difi.no/idporten-oidc-provider/.well-known/openid-configuration",
     clientID: process.env.CLIENT_ID || "bogus_client",
     clientSecret: process.env.CLIENT_SECRET || "bogus_secret",
     redirectUri : process.env.REDIRECT_URI || "http://localhost:3000/callback",
