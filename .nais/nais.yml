@@ -16,7 +16,7 @@ spec:
       rules: 
         - application: tokendings
           namespace: {{namespace}}
-  port: 8080
+  port: 3000
   replicas:
     min: 1
     max: 1
