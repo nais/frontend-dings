@@ -61,7 +61,7 @@ jobs:
     steps:
         - uses: actions/checkout@v1
         - uses: nais/deploy/actions/deploy@v1
-        env:
+          env:
             APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
             CLUSTER: dev-gcp
             RESOURCE: .nais/nais.yml
