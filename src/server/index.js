@@ -15,7 +15,7 @@ auth.setup(config.idporten, config.tokenx).then((endpoint) => {
     process.exit(1)
 })
 
-app.use(bodyParser.text());
+app.use(bodyParser.text())
 
 app.use(session({
     secret: config.app.sessionSecret,
@@ -23,6 +23,10 @@ app.use(session({
     saveUninitialized: false,
     cookie: { secure: config.isProd, httpOnly: true, maxAge: 3600000, sameSite: "lax" }
   }))
+
+app.get(['/internal/isalive', '/internal/isready'], async (req, res) => { 
+  res.sendStatus(200) 
+});
 
 app.get("/login", async (req, res) => {
   const session = req.session
@@ -39,14 +43,14 @@ app.get("/callback", async (req, res) => {
           res.cookie('dings-id', `${tokens.id_token}`, {
               secure: config.isProd,
               sameSite: "lax",
-          });
-          res.redirect(303, '/');
+          })
+          res.redirect(303, '/')
       })
       .catch((err) => {
-          console.log(err);
-          session.destroy(() => {});
-          res.sendStatus(403);
-      });
+          console.log(err)
+          session.destroy(() => {})
+          res.sendStatus(403)
+      })
 })
 
 // authenticated routes

@@ -1,0 +1,10 @@
+app: frontend-dings
+namespace: plattformsikkerhet
+team: plattformsikkerhet
+ingresses:
+  - https://frontend-dings.dev-gcp.nais.io
+host:
+  - oidc-ver2.difi.no
+env:
+  NODE_ENV: production
+slack_alert_channel: "plattformsikkerhet-alerts-dev"
