@@ -1,9 +1,7 @@
 import React from "react"
 import ReactDOM from "react-dom"
 
-const HelloMessage = (props) => {
-    return <div>Hello { props.name }</div>
-}
+import App from './components/App/App'
 
 var mountNode = document.getElementById("app")
-ReactDOM.render(<HelloMessage name="World" />, mountNode)
+ReactDOM.render(<App />, mountNode) 
