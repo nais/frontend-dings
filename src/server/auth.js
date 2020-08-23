@@ -8,8 +8,9 @@ let idportenClient = null
 const setup = async (idpConfig, txConfig) => {
     idportenConfig = idpConfig
     tokenxConfig = txConfig
-    return init().then((client) => {
-        idportenClient = client
+    return init().then((clients) => {
+        idportenClient = clients.idporten
+        tokenxClient = clients.tokenx
     })
 }
 
@@ -31,7 +32,7 @@ const init = async () => {
             redirect_uris: [idportenConfig.redirectUri, 'http://localhost:3000/callback'],
             response_types: ['code']
         })
-        return Promise.resolve(idportenClient, tokenxClient)
+        return Promise.resolve({idporten: idportenClient, tokenx: tokenxClient})
     } catch (err) {
         return Promise.reject(err)
     }
@@ -61,7 +62,7 @@ const validateOidcCallback = async (req) => {
         })
 }
 
-const exchangeToken = (idportenToken, clientAssertion, audience) => 
+const exchangeToken = async (idportenToken, clientAssertion, audience) => 
     tokenxClient.grant({
         grant_type: 'urn:ietf:params:oauth:grant-type:token-exchange',
         client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
@@ -70,10 +71,10 @@ const exchangeToken = (idportenToken, clientAssertion, audience) =>
         subject_token: idportenToken,
         subject_token_type: "urn:ietf:params:oauth:token-type:jwt"
     }).then(tokenSet => {
-        resolve(tokenSet.access_token);
+        Promise.resolve(tokenSet.access_token)
     }).catch(err => {
-        console.error(err);
-        reject(err);
+        console.error(err)
+        Promise.reject(err)
     })
 
 module.exports = { 
