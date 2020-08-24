@@ -21,7 +21,8 @@
     "node-fetch": "^2.6.0",
     "openid-client": "^3.15.9",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "winston-logstash-format": "^0.2.0"
   },
   "devDependencies": {
     "cssnano": "^4.1.10",

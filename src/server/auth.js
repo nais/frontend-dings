@@ -1,4 +1,5 @@
 const { Issuer } = require('openid-client')
+const logger = require('winston-logstash-format')
 
 let tokenxConfig = null
 let tokenxClient = null
@@ -17,8 +18,8 @@ const setup = async (idpConfig, txConfig) => {
 const init = async () => {
     const idporten = await Issuer.discover(idportenConfig.discoveryUrl)
     const tokenx = await Issuer.discover(tokenxConfig.discoveryUrl)
-    console.log(`discovered idporten @ ${idporten.issuer}`)
-    console.log(`discovered tokenx @ ${tokenx.issuer}`)
+    logger.info(`discovered idporten @ ${idporten.issuer}`)
+    logger.info(`discovered tokenx @ ${tokenx.issuer}`)
     try {
         idportenClient = new idporten.Client({
             client_id: idportenConfig.clientID,
@@ -26,12 +27,14 @@ const init = async () => {
             redirect_uris: [idportenConfig.redirectUri, 'http://localhost:3000/callback'],
             response_types: ['code']
         })
+        
         tokenxClient = new tokenx.Client({
             client_id: idportenConfig.clientID,
             client_secret: idportenConfig.clientSecret,
             redirect_uris: [idportenConfig.redirectUri, 'http://localhost:3000/callback'],
             response_types: ['code']
         })
+        
         return Promise.resolve({idporten: idportenClient, tokenx: tokenxClient})
     } catch (err) {
         return Promise.reject(err)

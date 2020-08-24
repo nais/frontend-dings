@@ -4,6 +4,7 @@ const  bodyParser = require('body-parser')
 const { generators, TokenSet } = require('openid-client')
 const auth = require('./auth')
 const config = require('./config')
+const logger = require('winston-logstash-format')
 
 const app = express()
 
@@ -11,7 +12,7 @@ let authEndpoint = null
 auth.setup(config.idporten, config.tokenx).then((endpoint) => {
     authEndpoint = endpoint
 }).catch((err) => {
-    console.log(err)
+    logger.error(err)
     process.exit(1)
 })
 
@@ -47,7 +48,7 @@ app.get("/callback", async (req, res) => {
           res.redirect(303, '/')
       })
       .catch((err) => {
-          console.log(err)
+          logger.error(err)
           session.destroy(() => {})
           res.sendStatus(403)
       })
@@ -72,5 +73,5 @@ app.use(async (req, res, next) => {
 app.use(express.static('dist/client'))
 
 app.listen(config.app.port, () => {
-  console.log(`frontend-dings listening at port ${config.app.port}`)
+  logger.info(`frontend-dings listening at port ${config.app.port}`)
 })
