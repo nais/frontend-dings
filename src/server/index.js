@@ -54,6 +54,11 @@ app.get("/callback", async (req, res) => {
 })
 
 // authenticated routes
+app.get('/api/getstuff', (req, res) => res.send({
+  stuff: 'thing',
+  thing: 'stuff'
+}))
+
 app.use(async (req, res, next) => {
   const tokenSet = new TokenSet(req.session.tokens)
   const needsLogin = !tokenSet.id_token || tokenSet.expired()
