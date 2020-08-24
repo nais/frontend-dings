@@ -5,6 +5,7 @@ const { generators, TokenSet } = require('openid-client')
 const auth = require('./auth')
 const config = require('./config')
 const logger = require('winston-logstash-format')
+const headers = require('./headers')
 
 const app = express()
 
@@ -17,6 +18,7 @@ auth.setup(config.idporten, config.tokenx).then((endpoint) => {
 })
 
 app.use(bodyParser.text())
+headers.setup(app)
 
 app.use(session({
     secret: config.app.sessionSecret,
