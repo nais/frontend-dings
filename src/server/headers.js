@@ -1,4 +1,4 @@
-const cspString = `default-src 'self'; script-src; script-src-elem; script-src-attr; style-src 'unsafe-hashes' 'sha256-4Su6mBWzEIFnH4pAGMOuaeBrstwJN4Z3pq/s1Kn4/KQ='; style-src-elem; style-src-attr 'unsafe-hashes' 'sha256-4Su6mBWzEIFnH4pAGMOuaeBrstwJN4Z3pq/s1Kn4/KQ='; img-src; font-src; connect-src; media-src; object-src; prefetch-src 'self'; child-src; worker-src; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content; base-uri; manifest-src; plugin-types`;
+const cspString = `default-src 'self'; upgrade-insecure-requests; block-all-mixed-content; base-uri; plugin-types`;
 
 const setup = (app) => {
     app.disable('X-Powered-By');

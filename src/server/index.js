@@ -56,11 +56,7 @@ app.get("/callback", async (req, res) => {
       })
 })
 
-// authenticated routes
-app.get('/api/getstuff', (req, res) => res.send({
-  stuff: 'thing',
-  thing: 'stuff'
-}))
+// authenticated routes below
 
 app.use(async (req, res, next) => {
   const tokenSet = new TokenSet(req.session.tokens)
@@ -71,6 +67,11 @@ app.use(async (req, res, next) => {
     return next()
   }
 })
+
+app.get('/api/getstuff', (req, res) => res.send({
+  stuff: 'thing',
+  thing: Math.floor(Math.random() * 10000)
+}))
 
 app.use(express.static('dist/client'))
 

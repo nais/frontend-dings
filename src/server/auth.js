@@ -76,7 +76,7 @@ const exchangeToken = async (idportenToken, clientAssertion, audience) =>
     }).then(tokenSet => {
         Promise.resolve(tokenSet.access_token)
     }).catch(err => {
-        console.error(err)
+        logger.error(err)
         Promise.reject(err)
     })
 
