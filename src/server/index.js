@@ -25,7 +25,7 @@ app.use(session({
     secret: config.app.sessionSecret,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: config.isProd, httpOnly: true, maxAge: 3600000, sameSite: "lax" }
+    cookie: { secure: config.isProd, httpOnly: true, maxAge: 86400, sameSite: "lax" }
   }))
 
 app.get(['/internal/isalive', '/internal/isready'], async (req, res) => { 
@@ -47,6 +47,7 @@ app.get("/callback", async (req, res) => {
           res.cookie('dings-id', `${tokens.id_token}`, {
               secure: config.isProd,
               sameSite: "lax",
+              maxAge: 86400
           })
           res.redirect(303, '/')
       })
@@ -57,8 +58,7 @@ app.get("/callback", async (req, res) => {
       })
 })
 
-// authenticated routes below
-
+// check auth
 app.use(async (req, res, next) => {
   let currentTokens = req.session.tokens
   if (!currentTokens) {
@@ -70,14 +70,11 @@ app.use(async (req, res, next) => {
       tokenSet = new TokenSet(await auth.refresh(currentTokens))
       req.session.tokens = tokenSet
     }
-    if (tokenSet.expired()) {
-      res.redirect('/login')
-    } else {
-      return next()
-    }
+    return next()
   }
 })
 
+// authenticated routes below
 app.get('/api/getstuff', (req, res) => res.send({
   stuff: 'thing',
   thing: Math.floor(Math.random() * 10000)
