@@ -50,3 +50,6 @@ spec:
       value: "{{this}}"
   {{/each}}
 
+  envFrom:
+    - secret: dingser-idporten
+
