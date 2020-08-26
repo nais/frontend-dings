@@ -13,7 +13,7 @@ let authEndpoint = null
 auth.setup(config.idporten, config.tokenx).then((endpoint) => {
     authEndpoint = endpoint
 }).catch((err) => {
-    logger.error(err)
+    logger.error(`Error while setting up auth: ${err}`)
     process.exit(1)
 })
 
@@ -21,6 +21,7 @@ app.use(bodyParser.text())
 headers.setup(app)
 
 app.use(session({
+    // in a production app use Redis or similar to store sessions
     secret: config.app.sessionSecret,
     resave: false,
     saveUninitialized: false,
@@ -59,12 +60,21 @@ app.get("/callback", async (req, res) => {
 // authenticated routes below
 
 app.use(async (req, res, next) => {
-  const tokenSet = new TokenSet(req.session.tokens)
-  const needsLogin = !tokenSet.id_token || tokenSet.expired()
-  if (needsLogin) {
+  let currentTokens = req.session.tokens
+  if (!currentTokens) {
     res.redirect('/login')
   } else {
-    return next()
+    let tokenSet = new TokenSet(currentTokens)
+    if (tokenSet.expired()) {
+      logger.debug('refreshing token')
+      tokenSet = new TokenSet(await auth.refresh(currentTokens))
+      req.session.tokens = tokenSet
+    }
+    if (tokenSet.expired()) {
+      res.redirect('/login')
+    } else {
+      return next()
+    }
   }
 })
 

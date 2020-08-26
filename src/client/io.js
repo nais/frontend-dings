@@ -1,7 +1,7 @@
 const loadStuffFromApi = async () => {
     const response = await fetch('/api/getstuff')
-    if (response.status >= 400) {
-        throw `HTTP error: ${response.status}`
+    if (response.status >= 300) {
+        throw `API returned status: ${response.status}`
     }
 
     return {

@@ -80,9 +80,18 @@ const exchangeToken = async (idportenToken, clientAssertion, audience) =>
         Promise.reject(err)
     })
 
+const refresh = (oldTokenSet) => 
+    idportenClient.refresh(oldTokenSet).then((newTokenSet) => {
+        Promise.resolve(newTokenSet)
+    }).catch(err => {
+        logger.error(err)
+        Promise.reject(err)
+    })
+
 module.exports = { 
     setup,
     authUrl,
     validateOidcCallback,
-    exchangeToken
+    exchangeToken,
+    refresh
 }
