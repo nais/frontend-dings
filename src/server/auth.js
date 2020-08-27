@@ -37,7 +37,8 @@ const init = async () => {
         
         tokenxClient = new tokenx.Client({
             client_id: tokenxConfig.clientID,
-            redirect_uris: [tokenxConfig.redirectUri, 'http://localhost:3000/callback']
+            redirect_uris: [tokenxConfig.redirectUri, 'http://localhost:3000/callback'],
+            token_endpoint_auth_method: 'none'
         })
         
         return Promise.resolve({idporten: idportenClient, tokenx: tokenxClient})
@@ -70,31 +71,34 @@ const validateOidcCallback = async (req) => {
         })
 }
 
-const exchangeToken = async (idportenToken) => 
-    tokenxClient.grant({
+const exchangeToken = async (idportenToken) => {
+    const clientAssertion = await createClientAssertion()
+    return tokenxClient.grant({
         grant_type: 'urn:ietf:params:oauth:grant-type:token-exchange',
         client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
-        client_assertion: createClientAssertion(), 
+        token_endpoint_auth_method: 'private_key_jwt',
+        subject_token_type: 'urn:ietf:params:oauth:token-type:jwt',
+        client_assertion: clientAssertion, 
         audience: tokenxMetadata.token_endpoint,
-        subject_token: idportenToken,
-        subject_token_type: 'urn:ietf:params:oauth:token-type:jwt'
+        subject_token: idportenToken
     }).then(tokenSet => {
-        Promise.resolve(tokenSet.access_token)
+        return Promise.resolve(tokenSet.access_token)
     }).catch(err => {
         logger.error(`Error while exchanging token: ${err}`)
-        Promise.reject(err)
+        return Promise.reject(err)
     })
+}
 
 const refresh = (oldTokenSet) => 
     idportenClient.refresh(oldTokenSet).then((newTokenSet) => {
-        Promise.resolve(newTokenSet)
+        return Promise.resolve(newTokenSet)
     }).catch(err => {
         logger.error(err)
-        Promise.reject(err)
+        return Promise.reject(err)
     })
 
 const createClientAssertion = async () => {
-    const now = Date.now() / 1000
+    const now = Math.floor(Date.now() / 1000)
     const clusterPrefix = appConfig.isProd ? 'prod' : 'dev'
     return jwt.sign({ 
         'sub': `${clusterPrefix}-gcp:plattformsikkerhet:frontend-dings`,

@@ -78,12 +78,12 @@ app.use(async (req, res, next) => {
 
 // authenticated routes below
 app.get('/api/getstuff', async (req, res) => {
-  try {
-    const accessToken = await auth.exchangeToken(req.session.id_token)
-    res.send(await apidings.getStuff())  
-  } catch (err) {
-    logger.error(`Error while calling api: ${err}`) 
-  }
+  auth.exchangeToken(req.session.tokens.id_token).then(accessToken => {
+      res.send(apidings.getStuff(accessToken))
+    }).catch((err) => {
+      logger.error(`Error while calling api: ${err}`)   
+      res.sendStatus(500)
+    })
 })
 
 app.use(express.static('dist/client'))
