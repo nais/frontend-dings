@@ -3,7 +3,8 @@ require('dotenv').config()
 const app = {
     sessionSecret: process.env.SESSION_SECRET || "TemmeligHemmelig",
     isProd: process.env.NODE_ENV === "production",
-    port: process.env.PORT || 3000
+    port: process.env.PORT || 3000,
+    apidingsUrl: process.env.NODE_ENV === "production" ? 'https://api-dings.prod-fss-pub.nais.io' : 'https://api-dings.dev-fss-pub.nais.io'
 }
 
 const idporten = {
@@ -16,7 +17,9 @@ const idporten = {
 }
 
 const tokenx = {
-    discoveryUrl: process.env.DISCOVERY_URL_TOKENX || 'https://tokendings.dev-gcp.nais.io/.well-known/oauth-authorization-server'
+    discoveryUrl: process.env.TOKEN_X_WELL_KNOWN_URL || 'https://tokendings.dev-gcp.nais.io/.well-known/oauth-authorization-server',
+    clientID: process.env.TOKEN_X_CLIENT_ID || "bogus_client",
+    privateJwk: JSON.parse(process.env.TOKEN_X_PRIVATE_JWK || "bogus_jwk")
 }
 
 module.exports = {

@@ -6,11 +6,12 @@ const auth = require('./auth')
 const config = require('./config')
 const logger = require('winston-logstash-format')
 const headers = require('./headers')
+const apidings = require('./apidings')
 
 const app = express()
 
 let authEndpoint = null
-auth.setup(config.idporten, config.tokenx).then((endpoint) => {
+auth.setup(config.idporten, config.tokenx, config.app).then((endpoint) => {
     authEndpoint = endpoint
 }).catch((err) => {
     logger.error(`Error while setting up auth: ${err}`)
@@ -19,9 +20,10 @@ auth.setup(config.idporten, config.tokenx).then((endpoint) => {
 
 app.use(bodyParser.text())
 headers.setup(app)
+apidings.init(config.app.apidingsUrl)
 
 app.use(session({
-    // in a production app use Redis or similar to store sessions
+    // in a production app use a proper session store like Redis or similar
     secret: config.app.sessionSecret,
     resave: false,
     saveUninitialized: false,
@@ -75,10 +77,14 @@ app.use(async (req, res, next) => {
 })
 
 // authenticated routes below
-app.get('/api/getstuff', (req, res) => res.send({
-  stuff: 'thing',
-  thing: Math.floor(Math.random() * 10000)
-}))
+app.get('/api/getstuff', async (req, res) => {
+  try {
+    const accessToken = await auth.exchangeToken(req.session.id_token)
+    res.send(await apidings.getStuff())  
+  } catch (err) {
+    logger.error(`Error while calling api: ${err}`) 
+  }
+})
 
 app.use(express.static('dist/client'))
 
