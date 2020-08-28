@@ -1,15 +1,15 @@
-import extractSubject from './tokeninterpreter'
+import extractPersonId from './tokeninterpreter'
 
 test('single cookie present', () => {
-    const subject = extractSubject(singleCookie)
-    expect(subject).toEqual('1234567890')
+    const subject = extractPersonId(singleCookie)
+    expect(subject).toEqual('12345678910')
 })
 
 test('multiple cookies present', () => {
-    const subject = extractSubject(multipleCookies)
-    expect(subject).toEqual('1234567890')
+    const subject = extractPersonId(multipleCookies)
+    expect(subject).toEqual('12345678910')
 })
 
-const singleCookie = 'dings-id=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
-const multipleCookies = 'dings-id=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c; tullecookie=whatever'
+const singleCookie = 'dings-id=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsb25nLWlkLWxpa2UtdXVpZCIsIm5hbWUiOiJKb2huIERvZSIsImlhdCI6MTUxNjIzOTAyMiwicGlkIjoiMTIzNDU2Nzg5MTAifQ.7UytsYd8hn31qqpgaaEKsPFR7z5oCurxnnDV0e9r8cc'
+const multipleCookies = 'dings-id=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsb25nLWlkLWxpa2UtdXVpZCIsIm5hbWUiOiJKb2huIERvZSIsImlhdCI6MTUxNjIzOTAyMiwicGlkIjoiMTIzNDU2Nzg5MTAifQ.7UytsYd8hn31qqpgaaEKsPFR7z5oCurxnnDV0e9r8cc; tullecookie=whatever'
 

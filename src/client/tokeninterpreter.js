@@ -1,8 +1,8 @@
-const extractSubject = (cookies) => {
+const extractPersonId = (cookies) => {
     const idToken = idTokenFromCookies(cookies).toString()
     const encodedClaims = idToken.split('.')[1]
     const decodedClaims = atob(encodedClaims)
-    return JSON.parse(decodedClaims)['sub']
+    return JSON.parse(decodedClaims)['pid']
 }
 
 const idTokenFromCookies = (cookies) => 
@@ -10,4 +10,4 @@ const idTokenFromCookies = (cookies) =>
            .filter((part) => part.startsWith('dings-id'))
            .map((cookie) => cookie.substring(cookie.indexOf('=') + 1))
 
-export default extractSubject
+export default extractPersonId
