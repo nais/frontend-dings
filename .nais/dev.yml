@@ -8,4 +8,5 @@ host:
   - oidc-ver2.difi.no
 env:
   NODE_ENV: production
+  REDIRECT_URI: https://frontend-dings.dev-gcp.nais.io/callback
 slack_alert_channel: "plattformsikkerhet-alerts-dev"
