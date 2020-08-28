@@ -2,9 +2,10 @@ require('dotenv').config()
 
 const app = {
     sessionSecret: process.env.SESSION_SECRET || "TemmeligHemmelig",
-    isLocal: !(process.env.NODE_ENV === "production"),
+    useSecureCookies: process.env.NAIS_CLUSTER_NAME ? true : false, 
     port: process.env.PORT || 3000,
-    apidingsUrl: process.env.NODE_ENV === "production" ? 'https://api-dings.prod-fss-pub.nais.io' : 'https://api-dings.dev-fss-pub.nais.io'
+    apidingsUrl: process.env.NODE_ENV === "production" ? 'https://api-dings.prod-fss-pub.nais.io' : 'https://api-dings.dev-fss-pub.nais.io',
+    cluster: process.env.NAIS_CLUSTER_NAME || ''
 }
 
 const idporten = {
