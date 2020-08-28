@@ -31,6 +31,7 @@ const init = async () => {
         idportenClient = new idporten.Client({
             client_id: idportenConfig.clientID,
             client_secret: idportenConfig.clientSecret,
+            token_endpoint_auth_method: 'client_secret_post',
             redirect_uris: [idportenConfig.redirectUri, 'http://localhost:3000/callback'],
             response_types: ['code']
         })
