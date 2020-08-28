@@ -38,11 +38,13 @@ app.get("/login", async (req, res) => {
   const session = req.session
   session.nonce = generators.nonce()
   session.state = generators.state()
+  console.log(`before login: ${session}`)
   res.redirect(auth.authUrl(req.session))
 })
 
 app.get("/callback", async (req, res) => {
   const session = req.session
+  console.log(`i callback: ${session}`)
   auth.validateOidcCallback(req)
       .then((tokens) => {
         session.tokens = tokens
