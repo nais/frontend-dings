@@ -26,7 +26,7 @@ app.use(session({
     // in a production app use a proper session store like Redis or similar
     secret: config.app.sessionSecret,
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     cookie: { secure: config.app.useSecureCookies, httpOnly: true, maxAge: 86400, sameSite: "lax" }
   }))
 
