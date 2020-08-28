@@ -22,6 +22,7 @@ app.use(bodyParser.text())
 headers.setup(app)
 apidings.init(config.app.apidingsUrl)
 
+app.set('trust proxy', 1);
 app.use(session({
     // in a production app use a proper session store like Redis or similar
     secret: config.app.sessionSecret,
