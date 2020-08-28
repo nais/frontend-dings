@@ -99,7 +99,7 @@ const refresh = (oldTokenSet) =>
 
 const createClientAssertion = async () => {
     const now = Math.floor(Date.now() / 1000)
-    const clusterPrefix = appConfig.isProd ? 'prod' : 'dev'
+    const clusterPrefix = !appConfig.isLocal ? 'prod' : 'dev'
     return jwt.sign({ 
         'sub': `${clusterPrefix}-gcp:plattformsikkerhet:frontend-dings`,
         'aud': tokenxMetadata.token_endpoint,

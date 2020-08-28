@@ -27,7 +27,7 @@ app.use(session({
     secret: config.app.sessionSecret,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: config.isProd, httpOnly: true, maxAge: 86400, sameSite: "lax" }
+    cookie: { secure: !config.app.isLocal, httpOnly: true, maxAge: 86400, sameSite: "lax" }
   }))
 
 app.get(['/internal/isalive', '/internal/isready'], async (req, res) => { 
@@ -47,7 +47,7 @@ app.get("/callback", async (req, res) => {
       .then((tokens) => {
         session.tokens = tokens
           res.cookie('dings-id', `${tokens.id_token}`, {
-              secure: config.isProd,
+              secure: !config.app.isLocal,
               sameSite: "lax",
               maxAge: 86400
           })
