@@ -80,7 +80,7 @@ const exchangeToken = async (idportenToken) => {
         token_endpoint_auth_method: 'private_key_jwt',
         subject_token_type: 'urn:ietf:params:oauth:token-type:jwt',
         client_assertion: clientAssertion, 
-        audience: 'dev-fss:plattformsikkerhet:api-dings', // todo: fetch from config instead of hardcoding
+        audience: appConfig.targetAudience,
         subject_token: idportenToken
     }).then(tokenSet => {
         return Promise.resolve(tokenSet.access_token)
