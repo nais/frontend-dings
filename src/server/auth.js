@@ -106,7 +106,8 @@ const createClientAssertion = async () => {
         'iss': `${appConfig.cluster}:plattformsikkerhet:frontend-dings`,
         'exp': now + 60, // max 120
         'iat': now,
-        'jti': ULID.ulid()
+        'jti': ULID.ulid(),
+        'nbf': now,
     }, await privateKeyToPem(tokenxConfig.privateJwk), { algorithm: 'RS256' })
 }
 
