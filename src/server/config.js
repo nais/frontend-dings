@@ -2,7 +2,7 @@ require('dotenv').config()
 
 const app = {
     sessionSecret: process.env.SESSION_SECRET || "TemmeligHemmelig",
-    isLocal: !process.env.NODE_ENV === "production",
+    isLocal: !(process.env.NODE_ENV === "production"),
     port: process.env.PORT || 3000,
     apidingsUrl: process.env.NODE_ENV === "production" ? 'https://api-dings.prod-fss-pub.nais.io' : 'https://api-dings.dev-fss-pub.nais.io'
 }
