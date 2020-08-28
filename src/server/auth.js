@@ -103,7 +103,7 @@ const createClientAssertion = async () => {
     return jwt.sign({ 
         'sub': `${appConfig.cluster}:plattformsikkerhet:frontend-dings`,
         'aud': tokenxMetadata.token_endpoint,
-        'iss': `${clusterPrefix}-gcp:plattformsikkerhet:frontend-dings`,
+        'iss': `${appConfig.cluster}-gcp:plattformsikkerhet:frontend-dings`,
         'exp': now + 60, // max 120
         'iat': now,
         'jti': ULID.ulid()
