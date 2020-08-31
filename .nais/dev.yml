@@ -2,7 +2,7 @@ app: frontend-dings
 namespace: plattformsikkerhet
 team: plattformsikkerhet
 ingresses:
-  - https://frontend-dings.dev-gcp.nais.io
+  - https://frontend-dings.dev.nav.no
 host:
   - oidc.difi.no
   - oidc-ver2.difi.no
