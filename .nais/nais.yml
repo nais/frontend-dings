@@ -16,6 +16,8 @@ spec:
       rules: 
         - application: tokendings
           namespace: {{namespace}}
+        - application: api-dings
+          namespace: {{namespace}}
   port: 3000
   replicas:
     min: 1
