@@ -38,6 +38,8 @@ spec:
     requests:
       cpu: 200m
       memory: 256Mi
+  tokenx:
+    enabled: true
 
   ingresses:
   {{#each ingresses as |url|}}
