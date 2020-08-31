@@ -9,4 +9,5 @@ host:
 env:
   NODE_ENV: production
   REDIRECT_URI: https://frontend-dings.dev-gcp.nais.io/callback
+  API_DINGS_AUDIENCE: dev-fss:plattformsikkerhet:api-dings
 slack_alert_channel: "plattformsikkerhet-alerts-dev"
