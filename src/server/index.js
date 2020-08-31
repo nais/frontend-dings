@@ -81,7 +81,7 @@ app.use(async (req, res, next) => {
 app.get('/api/getstuff', async (req, res) => {
   try {
     const accessToken = await auth.exchangeToken(req.session.tokens.id_token)
-    return apidings.getStuff(accessToken)
+    return await apidings.getStuff(accessToken)
   } catch (err) {
     logger.error(`Error while calling api: ${err}`)   
     res.sendStatus(500)
