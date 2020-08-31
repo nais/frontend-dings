@@ -4,7 +4,7 @@ const app = {
     sessionSecret: process.env.SESSION_SECRET || "TemmeligHemmelig",
     useSecureCookies: process.env.NAIS_CLUSTER_NAME ? true : false, 
     port: process.env.PORT || 3000,
-    apidingsUrl: process.env.NODE_ENV === "production" ? 'https://api-dings.prod-fss-pub.nais.io' : 'https://api-dings.dev-fss-pub.nais.io',
+    apidingsUrl: process.env.NAIS_CLUSTER_NAME === "dev-gcp" ? 'https://api-dings.dev-fss-pub.nais.io' : 'https://api-dings.prod-fss-pub.nais.io',
     targetAudience: process.env.API_DINGS_AUDIENCE || 'dev-fss:plattformsikkerhet:api-dings',
     cluster: process.env.NAIS_CLUSTER_NAME || ''
 }

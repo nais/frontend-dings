@@ -17,6 +17,7 @@ spec:
         - application: tokendings
           namespace: {{namespace}}
         - application: api-dings
+          cluster: dev-fss
           namespace: {{namespace}}
   port: 3000
   replicas:
