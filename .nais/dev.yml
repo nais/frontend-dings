@@ -6,6 +6,7 @@ ingresses:
 host:
   - oidc.difi.no
   - oidc-ver2.difi.no
+  - api-dings.dev-fss-pub.nais.io
 env:
   NODE_ENV: production
   REDIRECT_URI: https://frontend-dings.dev-gcp.nais.io/callback
