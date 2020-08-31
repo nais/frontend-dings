@@ -10,7 +10,7 @@ const getStuff = async (bearerToken) => {
     return fetch(`${baseUrl}/hello`, {
         method: 'get',
         headers: {"Authorization": `Bearer ${bearerToken}`}
-    }).then(res => Promise.resolve(res.text()))
+    }).then(res => res.text())
 }
 
 module.exports = {
