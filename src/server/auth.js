@@ -35,7 +35,7 @@ const init = async () => {
         idportenClient = new idporten.Client({
             client_id: idportenConfig.clientID,
             token_endpoint_auth_method: 'private_key_jwt',
-            token_endpoint_auth_signing_alg: 'RS256'
+            token_endpoint_auth_signing_alg: 'RS256',
             redirect_uris: [idportenConfig.redirectUri, 'http://localhost:3000/callback'],
             response_types: ['code']
         }, jwks)
