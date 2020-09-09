@@ -10,9 +10,9 @@ const app = {
 }
 
 const idporten = {
-    discoveryUrl: process.env.DISCOVERY_URL_IDPORTEN || "https://oidc-ver2.difi.no/idporten-oidc-provider/.well-known/openid-configuration",
+    discoveryUrl: process.env.IDPORTEN_WELL_KNOWN_URL || "https://oidc-ver2.difi.no/idporten-oidc-provider/.well-known/openid-configuration",
     clientID: process.env.IDPORTEN_CLIENT_ID || "bogus_client",
-    clientSecret: process.env.IDPORTEN_CLIENT_SECRET || "bogus_secret",
+    clientJwk: process.env.IDPORTEN_CLIENT_JWK || "bogus_jwk",
     redirectUri : process.env.REDIRECT_URI || "http://localhost:3000/callback",
     responseType: ['code'],
     scope: 'openid',

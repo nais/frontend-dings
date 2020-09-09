@@ -43,6 +43,13 @@ spec:
       memory: 256Mi
   tokenx:
     enabled: true
+  idporten:
+    enabled: true
+    redirectURIs:
+      - {{redirectUri}}
+    postLogoutRedirectURIs:
+      - "https://www.nav.no"
+    refreshTokenLifetime: 3600
 
   ingresses:
   {{#each ingresses as |url|}}
@@ -50,6 +57,8 @@ spec:
   {{/each}}
 
   env:
+    - name: REDIRECT_URI
+      value: {{redirectUri}}
   {{#each env}}
     - name: "{{@key}}"
       value: "{{this}}"

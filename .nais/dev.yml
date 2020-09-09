@@ -7,8 +7,8 @@ host:
   - oidc.difi.no
   - oidc-ver2.difi.no
   - api-dings.dev-fss-pub.nais.io
+redirectUri: https://frontend-dings.dev.nav.no/callback
 env:
   NODE_ENV: production
-  REDIRECT_URI: https://frontend-dings.dev.nav.no/callback
   API_DINGS_AUDIENCE: dev-fss:plattformsikkerhet:api-dings
 slack_alert_channel: "plattformsikkerhet-alerts-dev"

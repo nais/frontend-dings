@@ -1,4 +1,4 @@
-const { Issuer } = require('openid-client')
+const {Issuer} = require('openid-client')
 const logger = require('winston-logstash-format')
 const jwt = require('jsonwebtoken')
 const ULID = require('ulid')
@@ -28,20 +28,23 @@ const init = async () => {
     logger.info(`discovered idporten @ ${idporten.issuer}`)
     logger.info(`discovered tokenx @ ${tokenx.issuer}`)
     try {
+        jwk = JSON.parse(idportenConfig.clientJwk)
+        jwks = {
+            keys: [jwk]
+        }
         idportenClient = new idporten.Client({
             client_id: idportenConfig.clientID,
-            client_secret: idportenConfig.clientSecret,
-            token_endpoint_auth_method: 'client_secret_post',
+            token_endpoint_auth_method: 'private_key_jwt',
             redirect_uris: [idportenConfig.redirectUri, 'http://localhost:3000/callback'],
             response_types: ['code']
-        })
-        
+        }, jwks)
+
         tokenxClient = new tokenx.Client({
             client_id: tokenxConfig.clientID,
             redirect_uris: [tokenxConfig.redirectUri, 'http://localhost:3000/callback'],
             token_endpoint_auth_method: 'none'
         })
-        
+
         return Promise.resolve({idporten: idportenClient, tokenx: tokenxClient})
     } catch (err) {
         return Promise.reject(err)
@@ -65,7 +68,7 @@ const validateOidcCallback = async (req) => {
     const state = req.session.state
 
     return idportenClient
-        .callback(idportenConfig.redirectUri, params, { nonce, state })
+        .callback(idportenConfig.redirectUri, params, {nonce, state})
         .catch((err) => Promise.reject(`error in oidc callback: ${err}`))
         .then(async (tokenSet) => {
             return tokenSet
@@ -79,7 +82,7 @@ const exchangeToken = async (idportenToken) => {
         client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
         token_endpoint_auth_method: 'private_key_jwt',
         subject_token_type: 'urn:ietf:params:oauth:token-type:jwt',
-        client_assertion: clientAssertion, 
+        client_assertion: clientAssertion,
         audience: appConfig.targetAudience,
         subject_token: idportenToken
     }).then(tokenSet => {
@@ -90,7 +93,7 @@ const exchangeToken = async (idportenToken) => {
     })
 }
 
-const refresh = (oldTokenSet) => 
+const refresh = (oldTokenSet) =>
     idportenClient.refresh(oldTokenSet).then((newTokenSet) => {
         return Promise.resolve(newTokenSet)
     }).catch(err => {
@@ -100,7 +103,7 @@ const refresh = (oldTokenSet) =>
 
 const createClientAssertion = async () => {
     const now = Math.floor(Date.now() / 1000)
-    return jwt.sign({ 
+    return jwt.sign({
         'sub': `${appConfig.cluster}:plattformsikkerhet:frontend-dings`,
         'aud': tokenxMetadata.token_endpoint,
         'iss': `${appConfig.cluster}:plattformsikkerhet:frontend-dings`,
@@ -108,7 +111,7 @@ const createClientAssertion = async () => {
         'iat': now,
         'jti': ULID.ulid(),
         'nbf': now,
-    }, await privateKeyToPem(tokenxConfig.privateJwk), { algorithm: 'RS256' })
+    }, await privateKeyToPem(tokenxConfig.privateJwk), {algorithm: 'RS256'})
 }
 
 const privateKeyToPem = async (jwk) => jose.JWK.asKey(jwk)
@@ -116,7 +119,7 @@ const privateKeyToPem = async (jwk) => jose.JWK.asKey(jwk)
         return Promise.resolve(key.toPEM(true))
     })
 
-module.exports = { 
+module.exports = {
     setup,
     authUrl,
     validateOidcCallback,
