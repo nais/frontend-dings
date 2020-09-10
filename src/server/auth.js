@@ -9,6 +9,7 @@ let tokenxClient = null
 let tokenxMetadata = null;
 let idportenConfig = null
 let idportenClient = null
+let idportenMetadata = null;
 let appConfig = null
 
 const setup = async (idpConfig, txConfig, appConf) => {
@@ -25,6 +26,7 @@ const init = async () => {
     const idporten = await Issuer.discover(idportenConfig.discoveryUrl)
     const tokenx = await Issuer.discover(tokenxConfig.discoveryUrl)
     tokenxMetadata = tokenx
+    idportenMetadata = idporten
     logger.info(`discovered idporten @ ${idporten.issuer}`)
     logger.info(`discovered tokenx @ ${tokenx.issuer}`)
     try {
@@ -69,7 +71,7 @@ const validateOidcCallback = async (req) => {
     const state = req.session.state
 
     return idportenClient
-        .callback(idportenConfig.redirectUri, params, {nonce, state})
+        .callback(idportenConfig.redirectUri, params, {nonce, state}, { clientAssertionPayload: { aud: idportenMetadata.metadata.issuer }})
         .catch((err) => Promise.reject(`error in oidc callback: ${err}`))
         .then(async (tokenSet) => {
             return tokenSet
