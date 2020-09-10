@@ -15,7 +15,7 @@ const idporten = {
     clientJwk: process.env.IDPORTEN_CLIENT_JWK || "bogus_jwk",
     redirectUri : process.env.REDIRECT_URI || "http://localhost:3000/callback",
     responseType: ['code'],
-    scope: 'openid',
+    scope: 'openid profile',
 }
 
 const tokenx = {
