@@ -42,7 +42,7 @@ app.get("/login", async (req, res) => {
   res.redirect(auth.authUrl(session))
 })
 
-app.get("/callback", async (req, res) => {
+app.get("/oauth2/callback", async (req, res) => {
   const session = req.session
   auth.validateOidcCallback(req)
       .then((tokens) => {
