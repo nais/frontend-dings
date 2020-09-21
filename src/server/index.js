@@ -7,6 +7,7 @@ const config = require('./config')
 const logger = require('winston-logstash-format')
 const headers = require('./headers')
 const apidings = require('./apidings')
+const rateLimiter = require('./ratelimit')
 
 const app = express()
 
@@ -21,6 +22,8 @@ auth.setup(config.idporten, config.tokenx, config.app).then((endpoint) => {
 app.use(bodyParser.text())
 headers.setup(app)
 apidings.init(config.app.apidingsUrl)
+
+app.use(rateLimiter.limit);
 
 app.set('trust proxy', 1);
 app.use(session({
