@@ -35,7 +35,7 @@ app.get(['/internal/isalive', '/internal/isready'], async (req, res) => {
   res.sendStatus(200) 
 });
 
-app.get("/login", async (req, res) => {
+app.get("/login", async (req, res) => { // lgtm [js/missing-rate-limiting]
   const session = req.session
   session.nonce = generators.nonce()
   session.state = generators.state()

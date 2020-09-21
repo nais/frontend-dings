@@ -30,8 +30,8 @@ const init = async () => {
     logger.info(`discovered idporten @ ${idporten.issuer}`)
     logger.info(`discovered tokenx @ ${tokenx.issuer}`)
     try {
-        jwk = JSON.parse(idportenConfig.clientJwk)
-        jwks = {
+        const jwk = JSON.parse(idportenConfig.clientJwk)
+        const jwks = {
             keys: [jwk]
         }
         idportenClient = new idporten.Client({
