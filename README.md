@@ -1,5 +1,7 @@
 # FrontendDings
 
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/nais/frontend-dings.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/nais/frontend-dings/alerts/)
+
 **FrontendDings** is a demo app that demonstrates [ID-porten](https://eid.difi.no/en/id-porten) login and calling an API with a properly scoped token obtained from [TokenDings](https://github.com/nais/tokendings) 
 
 ## ⚖️ License
