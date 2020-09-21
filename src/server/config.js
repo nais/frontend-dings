@@ -1,7 +1,7 @@
 require('dotenv').config()
 
 const app = {
-    sessionSecret: process.env.SESSION_SECRET || "TemmeligHemmelig", // lgtm [js/hardcoded-credentials]
+    sessionSecret: process.env.SESSION_SECRET, 
     useSecureCookies: process.env.NAIS_CLUSTER_NAME ? true : false, 
     port: process.env.PORT || 3000,
     apidingsUrl: process.env.NAIS_CLUSTER_NAME === "dev-gcp" ? 'https://api-dings.dev-fss-pub.nais.io' : 'https://api-dings.prod-fss-pub.nais.io',
