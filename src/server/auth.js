@@ -1,8 +1,5 @@
 const {Issuer} = require('openid-client')
 const logger = require('winston-logstash-format')
-const jwt = require('jsonwebtoken')
-const ULID = require('ulid')
-const jose = require('node-jose')
 
 let tokenxConfig = null
 let tokenxClient = null
@@ -30,21 +27,23 @@ const init = async () => {
     logger.info(`discovered idporten @ ${idporten.issuer}`)
     logger.info(`discovered tokenx @ ${tokenx.issuer}`)
     try {
-        const jwk = JSON.parse(idportenConfig.clientJwk)
-        const jwks = {
-            keys: [jwk]
-        }
+        const idportenJwk = JSON.parse(idportenConfig.clientJwk)
+        const tokenxJwk =
         idportenClient = new idporten.Client({
             client_id: idportenConfig.clientID,
             token_endpoint_auth_method: 'private_key_jwt',
             token_endpoint_auth_signing_alg: 'RS256',
             redirect_uris: [idportenConfig.redirectUri, 'http://localhost:3000/callback'],
             response_types: ['code']
-        }, jwks)
+        }, {
+            keys: [idportenJwk]
+        })
 
         tokenxClient = new tokenx.Client({
             client_id: tokenxConfig.clientID,
-            token_endpoint_auth_method: 'none'
+            token_endpoint_auth_method: 'private_key_jwt'
+        }, {
+            keys: [tokenxJwk]
         })
 
         return Promise.resolve({idporten: idportenClient, tokenx: tokenxClient})
@@ -78,16 +77,20 @@ const validateOidcCallback = async (req) => {
 }
 
 const exchangeToken = async (idportenToken) => {
-    const clientAssertion = await createClientAssertion()
+    const now = Math.floor(Date.now() / 1000)
+    // additional claims not set by openid-client
+    const additionalClaims = {
+        clientAssertionPayload: {
+            'nbf': now
+        }
+    }
     return tokenxClient.grant({
         grant_type: 'urn:ietf:params:oauth:grant-type:token-exchange',
         client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
-        token_endpoint_auth_method: 'private_key_jwt',
         subject_token_type: 'urn:ietf:params:oauth:token-type:jwt',
-        client_assertion: clientAssertion,
         audience: appConfig.targetAudience,
         subject_token: idportenToken
-    }).then(tokenSet => {
+    }, additionalClaims).then(tokenSet => {
         return Promise.resolve(tokenSet.access_token)
     }).catch(err => {
         logger.error(`Error while exchanging token: ${err}`)
@@ -101,24 +104,6 @@ const refresh = (oldTokenSet) =>
     }).catch(err => {
         logger.error(err)
         return Promise.reject(err)
-    })
-
-const createClientAssertion = async () => {
-    const now = Math.floor(Date.now() / 1000)
-    return jwt.sign({
-        'sub': tokenxConfig.clientID,
-        'aud': tokenxMetadata.token_endpoint,
-        'iss': tokenxConfig.clientID,
-        'exp': now + 60, // max 120
-        'iat': now,
-        'jti': ULID.ulid(),
-        'nbf': now,
-    }, await privateKeyToPem(tokenxConfig.privateJwk), {algorithm: 'RS256'})
-}
-
-const privateKeyToPem = async (jwk) => jose.JWK.asKey(jwk)
-    .then((key) => {
-        return Promise.resolve(key.toPEM(true))
     })
 
 module.exports = {
