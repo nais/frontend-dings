@@ -44,7 +44,6 @@ const init = async () => {
 
         tokenxClient = new tokenx.Client({
             client_id: tokenxConfig.clientID,
-            redirect_uris: [tokenxConfig.redirectUri, 'http://localhost:3000/callback'],
             token_endpoint_auth_method: 'none'
         })
 
@@ -107,9 +106,9 @@ const refresh = (oldTokenSet) =>
 const createClientAssertion = async () => {
     const now = Math.floor(Date.now() / 1000)
     return jwt.sign({
-        'sub': `${appConfig.cluster}:plattformsikkerhet:frontend-dings`,
+        'sub': tokenxConfig.clientID,
         'aud': tokenxMetadata.token_endpoint,
-        'iss': `${appConfig.cluster}:plattformsikkerhet:frontend-dings`,
+        'iss': tokenxConfig.clientID,
         'exp': now + 60, // max 120
         'iat': now,
         'jti': ULID.ulid(),
