@@ -1,6 +1,6 @@
-const express = require("express")
-const headers = require('./headers')
-const fetch = require('node-fetch')
+import express from'express'
+import headers from './headers'
+import fetch from 'node-fetch'
 
 let server = null
 const port = 5555

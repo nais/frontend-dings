@@ -1,6 +1,6 @@
 const cspString = `default-src 'self'; upgrade-insecure-requests; block-all-mixed-content; base-uri; plugin-types`;
 
-const setup = (app) => {
+export const setup = (app) => {
     app.disable('x-powered-by');
     app.use((req, res, next) => {
         res.header('X-Frame-Options', 'DENY');
@@ -20,8 +20,4 @@ const setup = (app) => {
         }
         next();
     });
-};
-
-module.exports = { 
-    setup 
 };

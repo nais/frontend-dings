@@ -1,5 +1,5 @@
-const {Issuer} = require('openid-client')
-const logger = require('winston-logstash-format')
+import { Issuer } from 'openid-client'
+import logger from 'winston-logstash-format'
 
 let tokenxConfig = null
 let tokenxClient = null
@@ -9,7 +9,7 @@ let idportenClient = null
 let idportenMetadata = null;
 let appConfig = null
 
-const setup = async (idpConfig, txConfig, appConf) => {
+export const setup = async (idpConfig, txConfig, appConf) => {
     idportenConfig = idpConfig
     tokenxConfig = txConfig
     appConfig = appConf
@@ -18,6 +18,60 @@ const setup = async (idpConfig, txConfig, appConf) => {
         tokenxClient = clients.tokenx
     })
 }
+
+export const authUrl = (session) => {
+    return idportenClient.authorizationUrl({
+        scope: idportenConfig.scope,
+        redirect_uri: idportenConfig.redirectUri,
+        response_type: idportenConfig.responseType[0],
+        response_mode: 'query',
+        nonce: session.nonce,
+        state: session.state,
+    })
+}
+
+export const validateOidcCallback = async (req) => {
+    const params = idportenClient.callbackParams(req)
+    const nonce = req.session.nonce
+    const state = req.session.state
+
+    return idportenClient
+        .callback(idportenConfig.redirectUri, params, {nonce, state}, { clientAssertionPayload: { aud: idportenMetadata.metadata.issuer }})
+        .catch((err) => Promise.reject(`error in oidc callback: ${err}`))
+        .then(async (tokenSet) => {
+            return tokenSet
+        })
+}
+
+export const exchangeToken = async (idportenToken) => {
+    const now = Math.floor(Date.now() / 1000)
+    // additional claims not set by openid-client
+    const additionalClaims = {
+        clientAssertionPayload: {
+            'nbf': now
+        }
+    }
+    return tokenxClient.grant({
+        grant_type: 'urn:ietf:params:oauth:grant-type:token-exchange',
+        client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
+        subject_token_type: 'urn:ietf:params:oauth:token-type:jwt',
+        audience: appConfig.targetAudience,
+        subject_token: idportenToken
+    }, additionalClaims).then(tokenSet => {
+        return Promise.resolve(tokenSet.access_token)
+    }).catch(err => {
+        logger.error(`Error while exchanging token: ${err}`)
+        return Promise.reject(err)
+    })
+}
+
+export const refresh = (oldTokenSet) =>
+    idportenClient.refresh(oldTokenSet).then((newTokenSet) => {
+        return Promise.resolve(newTokenSet)
+    }).catch(err => {
+        logger.error(err)
+        return Promise.reject(err)
+    })
 
 const init = async () => {
     const idporten = await Issuer.discover(idportenConfig.discoveryUrl)
@@ -52,65 +106,4 @@ const init = async () => {
     }
 }
 
-const authUrl = (session) => {
-    return idportenClient.authorizationUrl({
-        scope: idportenConfig.scope,
-        redirect_uri: idportenConfig.redirectUri,
-        response_type: idportenConfig.responseType[0],
-        response_mode: 'query',
-        nonce: session.nonce,
-        state: session.state,
-    })
-}
-
-const validateOidcCallback = async (req) => {
-    const params = idportenClient.callbackParams(req)
-    const nonce = req.session.nonce
-    const state = req.session.state
-
-    return idportenClient
-        .callback(idportenConfig.redirectUri, params, {nonce, state}, { clientAssertionPayload: { aud: idportenMetadata.metadata.issuer }})
-        .catch((err) => Promise.reject(`error in oidc callback: ${err}`))
-        .then(async (tokenSet) => {
-            return tokenSet
-        })
-}
-
-const exchangeToken = async (idportenToken) => {
-    const now = Math.floor(Date.now() / 1000)
-    // additional claims not set by openid-client
-    const additionalClaims = {
-        clientAssertionPayload: {
-            'nbf': now
-        }
-    }
-    return tokenxClient.grant({
-        grant_type: 'urn:ietf:params:oauth:grant-type:token-exchange',
-        client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
-        subject_token_type: 'urn:ietf:params:oauth:token-type:jwt',
-        audience: appConfig.targetAudience,
-        subject_token: idportenToken
-    }, additionalClaims).then(tokenSet => {
-        return Promise.resolve(tokenSet.access_token)
-    }).catch(err => {
-        logger.error(`Error while exchanging token: ${err}`)
-        return Promise.reject(err)
-    })
-}
-
-const refresh = (oldTokenSet) =>
-    idportenClient.refresh(oldTokenSet).then((newTokenSet) => {
-        return Promise.resolve(newTokenSet)
-    }).catch(err => {
-        logger.error(err)
-        return Promise.reject(err)
-    })
-
-module.exports = {
-    setup,
-    authUrl,
-    validateOidcCallback,
-    exchangeToken,
-    refresh
-}
 

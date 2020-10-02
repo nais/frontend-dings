@@ -1,12 +1,8 @@
-const rateLimit = require('express-rate-limit')
+import * as rateLimit from 'express-rate-limit'
 
-const limit = rateLimit({
+export const limit = rateLimit.default({
     windowMs: 60 * 1000, // 1 minute
     max: 100,
     message: 'You have exceeded the 100 requests in 1 minute limit!', 
     headers: true,
   })
-
-module.exports = {
-    limit
-}
