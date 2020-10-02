@@ -14,8 +14,6 @@ spec:
         - host: "{{this}}"
       {{/each}}
       rules: 
-        - application: tokendings
-          namespace: {{namespace}}
         - application: api-dings
           cluster: dev-fss
           namespace: {{namespace}}
