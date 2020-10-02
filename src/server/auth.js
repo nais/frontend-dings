@@ -28,7 +28,7 @@ const init = async () => {
     logger.info(`discovered tokenx @ ${tokenx.issuer}`)
     try {
         const idportenJwk = JSON.parse(idportenConfig.clientJwk)
-        const tokenxJwk =
+        const tokenxJwk = JSON.parse(tokenxConfig.privateJwk)
         idportenClient = new idporten.Client({
             client_id: idportenConfig.clientID,
             token_endpoint_auth_method: 'private_key_jwt',
