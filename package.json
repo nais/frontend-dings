@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Demoapp that uses TokenX",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "dev-client": "NODE_ENV=development $(npm bin)/parcel src/client/index.html",
     "test-client": "$(npm bin)/jest --testPathPattern=src/client",
@@ -43,3 +44,4 @@
     "rimraf": "^3.0.2"
   }
 }
+

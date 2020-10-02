@@ -1,13 +1,13 @@
-const express = require("express")
-const session = require('express-session')
-const  bodyParser = require('body-parser')
-const { generators, TokenSet } = require('openid-client')
-const auth = require('./auth')
-const config = require('./config')
-const logger = require('winston-logstash-format')
-const headers = require('./headers')
-const apidings = require('./apidings')
-const rateLimiter = require('./ratelimit')
+import express from 'express'
+import session from 'express-session'
+import bodyParser from 'body-parser'
+import  { generators, TokenSet }  from 'openid-client'
+import logger from 'winston-logstash-format'
+import * as auth from './auth.js'
+import * as config from './config.js'
+import * as headers from './headers.js'
+import * as apidings from './apidings.js'
+import { limit } from'./ratelimit.js'
 
 const app = express()
 
@@ -23,7 +23,7 @@ app.use(bodyParser.text())
 headers.setup(app)
 apidings.init(config.app.apidingsUrl)
 
-app.use(rateLimiter.limit);
+app.use(limit);
 
 app.set('trust proxy', 1);
 app.use(session({

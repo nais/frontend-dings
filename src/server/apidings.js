@@ -1,19 +1,15 @@
-const fetch = require('node-fetch')
+import fetch from 'node-fetch'
 
 let baseUrl = null
 
-const init = (apidingsUrl) => {
+export const init = (apidingsUrl) => {
     baseUrl = apidingsUrl
 }
 
-const getStuff = async (bearerToken) => {
+export const getStuff = async (bearerToken) => {
     return fetch(`${baseUrl}/hello`, {
         method: 'get',
         headers: {"Authorization": `Bearer ${bearerToken}`}
     }).then(res => res.text())
 }
 
-module.exports = {
-    init,
-    getStuff
-}
