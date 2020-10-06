@@ -1,6 +1,6 @@
 import express from'express'
-import headers from './headers'
-import fetch from 'node-fetch'
+import * as headers from './headers'
+import * as fetch from 'node-fetch'
 
 let server = null
 const port = 5555
