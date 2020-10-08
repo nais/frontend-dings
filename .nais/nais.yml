@@ -1,10 +1,10 @@
 apiVersion: nais.io/v1alpha1
 kind: Application
 metadata:
-  name: {{app}}
-  namespace: {{namespace}}
+  name: frontend-dings
+  namespace: plattformsikkerhet
   labels:
-    team: {{team}}
+    team: plattformsikkerhet
 spec:
   image: {{ image }}
   accessPolicy:
@@ -13,10 +13,6 @@ spec:
       {{#each host}}
         - host: "{{this}}"
       {{/each}}
-      rules: 
-        - application: api-dings
-          cluster: dev-fss
-          namespace: {{namespace}}
   port: 3000
   replicas:
     min: 1
