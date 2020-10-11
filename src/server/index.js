@@ -49,7 +49,9 @@ app.get("/oauth2/callback", async (req, res) => {
   const session = req.session
   auth.validateOidcCallback(req)
       .then((tokens) => {
-        session.tokens = tokens
+         session.tokens = tokens
+         session.state = null
+         session.nonce = null
           res.cookie('dings-id', `${tokens.id_token}`, {
               secure: config.app.useSecureCookies,
               sameSite: "lax",
