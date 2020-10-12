@@ -1,5 +1,5 @@
 ingresses:
-  - https://frontend-dings.adeo.no
+  - https://frontend-dings.intern.nav.no
 host:
   - api-dings.prod-fss-pub.nais.io
 fss-cluster: prod-fss
