@@ -10,7 +10,7 @@ name: Anchore Container Scan
 
 on:
   schedule:
-    - cron: "0/15 * * * *"
+    - cron: "* 0/15 * * *"
 
 jobs:
   Anchore-Build-Scan:
