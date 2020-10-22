@@ -8,27 +8,30 @@
 
 name: Anchore Container Scan
 
-on: deployment
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   Anchore-Build-Scan:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout the code
-      uses: actions/checkout@v2
-    - name: pull lastest docker image
-      run: |
-        echo "$GITHUB_TOKEN" | docker login --username "$GITHUB_REPOSITORY" --password-stdin https://docker.pkg.github.com
-        docker pull docker.pkg.github.com/${{ github.repository }}/frontend-dings:latest
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: Run Anchore scan
-      uses: anchore/scan-action@main
-      with:
-        image-reference: "docker.pkg.github.com/${{ github.repository }}/frontend-dings:latest"
-        dockerfile-path: "Dockerfile"
-        acs-report-enable: true
-    - name: Upload Anchore Scan Report
-      uses: github/codeql-action/upload-sarif@v1
-      with:
-        sarif_file: results.sarif
+      - name: Checkout the code
+        uses: actions/checkout@v2
+      - name: pull lastest docker image
+        run: |
+          echo "$GITHUB_TOKEN" | docker login --username "$GITHUB_REPOSITORY" --password-stdin https://docker.pkg.github.com
+          docker pull docker.pkg.github.com/${{ github.repository }}/frontend-dings:latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run Anchore scan
+        uses: anchore/scan-action@main
+        with:
+          image-reference: "docker.pkg.github.com/${{ github.repository }}/frontend-dings:latest"
+          dockerfile-path: "Dockerfile"
+          acs-report-enable: true
+      - name: Upload Anchore Scan Report
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: results.sarif
