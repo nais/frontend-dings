@@ -13,6 +13,8 @@ spec:
       {{#each host}}
         - host: "{{this}}"
       {{/each}}
+      rules:
+        - application: frontend-dings-redis
   port: 3000
   replicas:
     min: 1
