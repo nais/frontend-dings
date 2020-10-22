@@ -3,11 +3,18 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 export const app = {
-    sessionSecret: process.env.SESSION_SECRET, 
     useSecureCookies: !!process.env.NAIS_CLUSTER_NAME,
     port: process.env.PORT || 3000,
     apidingsUrl: process.env.API_DINGS_URL || 'https://api-dings.dev-fss-pub.nais.io',
     targetAudience: process.env.API_DINGS_AUDIENCE || 'dev-fss:plattformsikkerhet:api-dings',
+}
+
+export const session = {
+    secret: process.env.SESSION_SECRET,
+    maxAgeMs: process.env.SESSION_MAX_AGE_MS || 12 * 60 * 60 * 1000, // defaults to 12 hours
+    redisHost: process.env.REDIS_HOST,
+    redisPort: process.env.REDIS_PORT || 6379,
+    redisPassword: process.env.REDIS_PASSWORD,
 }
 
 export const idporten = {

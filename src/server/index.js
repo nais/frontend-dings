@@ -1,5 +1,4 @@
 import express from 'express'
-import session from 'express-session'
 import bodyParser from 'body-parser'
 import  { generators, TokenSet }  from 'openid-client'
 import logger from 'winston-logstash-format'
@@ -8,16 +7,17 @@ import * as config from './config.js'
 import * as headers from './headers.js'
 import * as apidings from './apidings.js'
 import { limit } from'./ratelimit.js'
+import { setupSession } from './session.js'
 
 const app = express()
 
 let authEndpoint = null
-auth.setup(config.idporten, config.tokenx, config.app).then((endpoint) => {
+/*auth.setup(config.idporten, config.tokenx, config.app).then((endpoint) => {
     authEndpoint = endpoint
 }).catch((err) => {
     logger.error(`Error while setting up auth: ${err}`)
     process.exit(1)
-})
+})*/
 
 app.use(bodyParser.text())
 headers.setup(app)
@@ -26,13 +26,7 @@ apidings.init(config.app.apidingsUrl)
 app.use(limit);
 
 app.set('trust proxy', 1);
-app.use(session({
-    // in a production app use a proper session store like Redis or similar
-    secret: config.app.sessionSecret,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: config.app.useSecureCookies, httpOnly: true, maxAge: 86400, sameSite: "lax" }
-  }))
+app.use(setupSession())
 
 app.get(['/internal/isalive', '/internal/isready'], async (req, res) => { 
   res.sendStatus(200) 
@@ -55,7 +49,7 @@ app.get("/oauth2/callback", async (req, res) => {
           res.cookie('dings-id', `${tokens.id_token}`, {
               secure: config.app.useSecureCookies,
               sameSite: "lax",
-              maxAge: 86400
+              maxAge: config.session.maxAgeMs
           })
           res.redirect(303, '/')
       })
