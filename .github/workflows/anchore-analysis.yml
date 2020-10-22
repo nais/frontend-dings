@@ -9,9 +9,8 @@
 name: Anchore Container Scan
 
 on:
-  push:
-    branches:
-      - main
+  schedule:
+    - cron: "0/15 * * * *"
 
 jobs:
   Anchore-Build-Scan:
@@ -22,13 +21,13 @@ jobs:
       - name: pull lastest docker image
         run: |
           echo "$GITHUB_TOKEN" | docker login --username "$GITHUB_REPOSITORY" --password-stdin https://docker.pkg.github.com
-          docker pull docker.pkg.github.com/${{ github.repository }}/frontend-dings:latest
+          docker pull docker.pkg.github.com/${{ github.repository }}/frontend-dings:{{ github.sha }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Run Anchore scan
         uses: anchore/scan-action@main
         with:
-          image-reference: "docker.pkg.github.com/${{ github.repository }}/frontend-dings:latest"
+          image-reference: "docker.pkg.github.com/${{ github.repository }}/frontend-dings:{{ github.sha }}"
           dockerfile-path: "Dockerfile"
           acs-report-enable: true
       - name: Upload Anchore Scan Report
