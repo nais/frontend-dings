@@ -53,7 +53,7 @@ spec:
       value: "{{this}}"
   {{/each}}
     - name: REDIS_HOST
-      value: redis://frontend-dings-redis
+      value: frontend-dings-redis
 
   envFrom:
     - secret: session-encrypt-key

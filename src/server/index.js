@@ -12,12 +12,12 @@ import { setupSession } from './session.js'
 const app = express()
 
 let authEndpoint = null
-/*auth.setup(config.idporten, config.tokenx, config.app).then((endpoint) => {
+auth.setup(config.idporten, config.tokenx, config.app).then((endpoint) => {
     authEndpoint = endpoint
 }).catch((err) => {
     logger.error(`Error while setting up auth: ${err}`)
     process.exit(1)
-})*/
+})
 
 app.use(bodyParser.text())
 headers.setup(app)
