@@ -21,13 +21,13 @@ jobs:
       - name: pull lastest docker image
         run: |
           echo "$GITHUB_TOKEN" | docker login --username "$GITHUB_REPOSITORY" --password-stdin https://docker.pkg.github.com
-          docker pull docker.pkg.github.com/${{ github.repository }}/frontend-dings:{{ github.sha }}
+          docker pull docker.pkg.github.com/${{ github.repository }}/frontend-dings:${{ github.sha }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Run Anchore scan
         uses: anchore/scan-action@main
         with:
-          image-reference: "docker.pkg.github.com/${{ github.repository }}/frontend-dings:{{ github.sha }}"
+          image-reference: "docker.pkg.github.com/${{ github.repository }}/frontend-dings:${{ github.sha }}"
           dockerfile-path: "Dockerfile"
           acs-report-enable: true
       - name: Upload Anchore Scan Report
