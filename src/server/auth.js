@@ -28,6 +28,7 @@ export const authUrl = (session) => {
         nonce: session.nonce,
         state: session.state,
         resource: "https://nav.no",
+        acr_values: "Level4",
     })
 }
 
