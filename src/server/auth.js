@@ -1,4 +1,4 @@
-import { Issuer } from 'openid-client'
+import {Issuer, TokenSet} from 'openid-client'
 import logger from 'winston-logstash-format'
 
 let tokenxConfig = null
@@ -36,9 +36,14 @@ export const validateOidcCallback = async (req) => {
     const params = idportenClient.callbackParams(req)
     const nonce = req.session.nonce
     const state = req.session.state
+    const additionalClaims = {
+        clientAssertionPayload: {
+            'aud': idportenMetadata.issuer
+        }
+    }
 
     return idportenClient
-        .callback(idportenConfig.redirectUri, params, {nonce, state}, { clientAssertionPayload: { aud: idportenMetadata.metadata.issuer }})
+        .callback(idportenConfig.redirectUri, params, {nonce, state}, additionalClaims)
         .catch((err) => Promise.reject(`error in oidc callback: ${err}`))
         .then(async (tokenSet) => {
             return tokenSet
@@ -67,13 +72,20 @@ export const exchangeToken = async (idportenToken) => {
     })
 }
 
-export const refresh = (oldTokenSet) =>
-    idportenClient.refresh(oldTokenSet).then((newTokenSet) => {
-        return Promise.resolve(newTokenSet)
-    }).catch(err => {
-        logger.error(err)
-        return Promise.reject(err)
-    })
+export const refresh = (oldTokenSet) => {
+    const additionalClaims = {
+        clientAssertionPayload: {
+            'aud': idportenMetadata.issuer
+        }
+    }
+    return idportenClient.refresh(new TokenSet(oldTokenSet), additionalClaims)
+        .then((newTokenSet) => {
+            return Promise.resolve(newTokenSet)
+        }).catch(err => {
+            logger.error(err)
+            return Promise.reject(err)
+        })
+}
 
 const init = async () => {
     const idporten = await Issuer.discover(idportenConfig.discoveryUrl)

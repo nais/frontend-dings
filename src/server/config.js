@@ -21,7 +21,7 @@ export const idporten = {
     discoveryUrl: process.env.IDPORTEN_WELL_KNOWN_URL || "https://oidc-ver2.difi.no/idporten-oidc-provider/.well-known/openid-configuration",
     clientID: process.env.IDPORTEN_CLIENT_ID,
     clientJwk: process.env.IDPORTEN_CLIENT_JWK,
-    redirectUri : process.env.IDPORTEN_REDIRECT_URI || "http://localhost:3000/callback",
+    redirectUri : process.env.IDPORTEN_REDIRECT_URI || "http://localhost:3000/oauth2/callback",
     responseType: ['code'],
     scope: 'openid profile',
 }
