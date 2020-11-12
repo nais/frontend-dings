@@ -23,7 +23,7 @@ export const authUrl = (session) => {
     return idportenClient.authorizationUrl({
         scope: idportenConfig.scope,
         redirect_uri: idportenConfig.redirectUri,
-        response_type: idportenConfig.responseType[0],
+        response_type: 'code',
         response_mode: 'query',
         nonce: session.nonce,
         state: session.state,
