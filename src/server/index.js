@@ -69,6 +69,7 @@ app.use(async (req, res, next) => {
     let tokenSet = new TokenSet(currentTokens)
     if (tokenSet.expired()) {
       logger.debug('refreshing token')
+        // TODO - error handling - destroy/unset session and redirect to login if refresh fails (maybe only on http 4xx errors)
       tokenSet = new TokenSet(await auth.refresh(currentTokens))
       req.session.tokens = tokenSet
     }
