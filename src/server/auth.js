@@ -79,12 +79,6 @@ export const refresh = (oldTokenSet) => {
         }
     }
     return idportenClient.refresh(new TokenSet(oldTokenSet), additionalClaims)
-        .then((newTokenSet) => {
-            return Promise.resolve(newTokenSet)
-        }).catch(err => {
-            logger.error(err)
-            return Promise.reject(err)
-        })
 }
 
 const init = async () => {

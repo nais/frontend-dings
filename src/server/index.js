@@ -28,8 +28,8 @@ app.use(limit);
 app.set('trust proxy', 1);
 app.use(setupSession())
 
-app.get(['/internal/isalive', '/internal/isready'], async (req, res) => { 
-  res.sendStatus(200) 
+app.get(['/internal/isalive', '/internal/isready'], async (req, res) => {
+  res.sendStatus(200)
 });
 
 app.get("/login", async (req, res) => { // lgtm [js/missing-rate-limiting]
@@ -62,20 +62,27 @@ app.get("/oauth2/callback", async (req, res) => {
 
 // check auth
 app.use(async (req, res, next) => {
-  let currentTokens = req.session.tokens
-  if (!currentTokens) {
-    res.redirect('/login')
-  } else {
-    let tokenSet = new TokenSet(currentTokens)
-    if (tokenSet.expired()) {
-      logger.debug('refreshing token')
-        // TODO - error handling - destroy/unset session and redirect to login if refresh fails (maybe only on http 4xx errors)
-      tokenSet = new TokenSet(await auth.refresh(currentTokens))
-      req.session.tokens = tokenSet
+    let currentTokens = req.session.tokens;
+    if (!currentTokens) {
+        res.redirect("/login")
+    } else {
+        const currentTokenSet = new TokenSet(currentTokens);
+        if (currentTokenSet.expired()) {
+            logger.debug("refreshing token")
+            auth
+                .refresh(currentTokens)
+                .then((refreshedTokenSet) => {
+                    req.session.tokens = new TokenSet(refreshedTokenSet)
+                })
+                .catch((err) => {
+                    logger.error(err)
+                    req.session.destroy()
+                    res.redirect('/login')
+                });
+        }
+        return next();
     }
-    return next()
-  }
-})
+});
 
 // authenticated routes below
 app.get('/api/getstuff', async (req, res) => {
@@ -84,7 +91,7 @@ app.get('/api/getstuff', async (req, res) => {
     const response = await apidings.getStuff(accessToken);
     res.send(response)
   } catch (err) {
-    logger.error(`Error while calling api: ${err}`)   
+    logger.error(`Error while calling api: ${err}`)
     res.sendStatus(500)
   }
 })
