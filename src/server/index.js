@@ -23,14 +23,14 @@ app.use(bodyParser.text())
 headers.setup(app)
 apidings.init(config.app.apidingsUrl)
 
-app.use(limit);
+app.use(limit)
 
-app.set('trust proxy', 1);
+app.set('trust proxy', 1)
 app.use(setupSession())
 
 app.get(['/internal/isalive', '/internal/isready'], async (req, res) => {
   res.sendStatus(200)
-});
+})
 
 app.get("/login", async (req, res) => { // lgtm [js/missing-rate-limiting]
   const session = req.session
@@ -62,11 +62,11 @@ app.get("/oauth2/callback", async (req, res) => {
 
 // check auth
 app.use(async (req, res, next) => {
-    let currentTokens = req.session.tokens;
+    let currentTokens = req.session.tokens
     if (!currentTokens) {
         res.redirect("/login")
     } else {
-        const currentTokenSet = new TokenSet(currentTokens);
+        const currentTokenSet = new TokenSet(currentTokens)
         if (currentTokenSet.expired()) {
             logger.debug("refreshing token")
             auth
@@ -78,17 +78,17 @@ app.use(async (req, res, next) => {
                     logger.error(err)
                     req.session.destroy()
                     res.redirect('/login')
-                });
+                })
         }
-        return next();
+        return next()
     }
-});
+})
 
 // authenticated routes below
 app.get('/api/getstuff', async (req, res) => {
   try {
     const accessToken = await auth.exchangeToken(req.session.tokens.access_token)
-    const response = await apidings.getStuff(accessToken);
+    const response = await apidings.getStuff(accessToken)
     res.send(response)
   } catch (err) {
     logger.error(`Error while calling api: ${err}`)

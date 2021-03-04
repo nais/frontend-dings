@@ -3,10 +3,10 @@ import logger from 'winston-logstash-format'
 
 let tokenxConfig = null
 let tokenxClient = null
-let tokenxMetadata = null;
+let tokenxMetadata = null
 let idportenConfig = null
 let idportenClient = null
-let idportenMetadata = null;
+let idportenMetadata = null
 let appConfig = null
 
 export const setup = async (idpConfig, txConfig, appConf) => {
