@@ -33,16 +33,17 @@ jobs:
         run: npm run build-client
       - name: build server
         run: npm run build-server
-      - name: build docker image
+      - name: Login to GitHub Docker Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build an push the Docker image
         run: |
           npm prune --production
-          docker build . --pull -t ${{ env.IMAGE }}
-      - name: push docker image
-        run: |
-          echo "$GITHUB_TOKEN" | docker login --username "$GITHUB_REPOSITORY" --password-stdin https://docker.pkg.github.com
-          docker push ${{ env.IMAGE }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          docker build --pull --tag ${IMAGE} .
+          docker push ${IMAGE}
 
   deploy-dev-gcp:
     name: Deploy to dev-gcp
