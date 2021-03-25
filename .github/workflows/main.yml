@@ -7,7 +7,7 @@ on:
 env:
   APP: frontend-dings
   TEAM: plattformsikkerhet
-  IMAGE: docker.pkg.github.com/${{ github.repository }}/frontend-dings:${{ github.sha }}
+  IMAGE: ghcr.io/${{ github.repository }}:${{ github.sha }}
 
 jobs:
   build:
