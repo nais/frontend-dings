@@ -50,26 +50,35 @@ export const validateOidcCallback = async (req) => {
         })
 }
 
-export const exchangeToken = async (idportenToken) => {
-    const now = Math.floor(Date.now() / 1000)
+export const exchangeToken = async (session, servicename) => {
+    const cachedAccessTokenSet = session[`${servicename}-accesstoken`]
+    if (cachedAccessTokenSet && !cachedAccessTokenSet.expired()) {
+        logger.info(`Using cached token for ${servicename}`)
+        return Promise.resolve(cachedAccessTokenSet.access_token)
+    }
+
     // additional claims not set by openid-client
     const additionalClaims = {
         clientAssertionPayload: {
-            'nbf': now
+            'nbf': Math.floor(Date.now() / 1000)
         }
     }
+
     return tokenxClient.grant({
         grant_type: 'urn:ietf:params:oauth:grant-type:token-exchange',
         client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
         subject_token_type: 'urn:ietf:params:oauth:token-type:jwt',
         audience: appConfig.targetAudience,
-        subject_token: idportenToken
+        subject_token: session.tokens.access_token
     }, additionalClaims).then(tokenSet => {
+        logger.info(`Retrieved new token for ${servicename}`)
+        session[`${servicename}-accesstoken`] = tokenSet
         return Promise.resolve(tokenSet.access_token)
     }).catch(err => {
         logger.error(`Error while exchanging token: ${err}`)
         return Promise.reject(err)
     })
+
 }
 
 export const refresh = (oldTokenSet) => {

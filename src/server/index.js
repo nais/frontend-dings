@@ -86,7 +86,7 @@ app.use(async (req, res, next) => {
 // authenticated routes below
 app.get('/api/getstuff', async (req, res) => {
   try {
-    const accessToken = await auth.exchangeToken(req.session.tokens.access_token)
+    const accessToken = await auth.exchangeToken(req.session, 'apidings')
     const response = await apidings.getStuff(accessToken)
     res.send(response)
   } catch (err) {
