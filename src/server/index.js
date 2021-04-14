@@ -1,5 +1,4 @@
 import express from 'express'
-import bodyParser from 'body-parser'
 import  { generators, TokenSet }  from 'openid-client'
 import logger from 'winston-logstash-format'
 import * as auth from './auth.js'
@@ -19,7 +18,7 @@ auth.setup(config.idporten, config.tokenx, config.app).then((endpoint) => {
     process.exit(1)
 })
 
-app.use(bodyParser.text())
+app.use(express.text())
 headers.setup(app)
 apidings.init(config.app.apidingsUrl)
 
