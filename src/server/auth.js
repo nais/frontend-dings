@@ -52,7 +52,7 @@ export const validateOidcCallback = async (req) => {
 
 export const exchangeToken = async (session, servicename) => {
     const cachedAccessTokenSet = session[`${servicename}_accesstoken`]
-    logger.info(`session: ${session.getOwnPropertyNames()}`)
+    logger.info(`session: ${Object.getOwnPropertyNames(session)}`)
     if (cachedAccessTokenSet && !cachedAccessTokenSet.expired()) {
         logger.info(`Using cached token for ${servicename}`)
         return Promise.resolve(cachedAccessTokenSet.access_token)
