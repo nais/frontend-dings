@@ -10,7 +10,7 @@ export const app = {
 }
 
 export const session = {
-    secret: process.env.SESSION_SECRET,
+    secret: "tullesecret_se_om_sec_scan_finner",
     maxAgeMs: process.env.SESSION_MAX_AGE_MS || 2 * 60 * 60 * 1000, // defaults to 2 hours
     redisHost: process.env.REDIS_HOST,
     redisPort: process.env.REDIS_PORT || 6379,
