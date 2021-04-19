@@ -73,7 +73,7 @@ export const exchangeToken = async (session, servicename) => {
         subject_token: session.tokens.access_token
     }, additionalClaims).then(tokenSet => {
         logger.info(`Retrieved new token for ${servicename}, ${typeof tokenSet}, ${tokenSet instanceof TokenSet}`)
-        session[`${servicename}_tokenset`] = new TokenSet(tokenSet)
+        session[`${servicename}_tokenset`] = tokenSet
         return Promise.resolve(tokenSet.access_token)
     }).catch(err => {
         logger.error(`Error while exchanging token: ${err}`)
