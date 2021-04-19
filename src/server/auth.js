@@ -51,11 +51,7 @@ export const validateOidcCallback = async (req) => {
 }
 
 export const exchangeToken = async (session, servicename) => {
-    const cachedAccessTokenSet = session[`${servicename}_accesstoken`]
-    if (cachedAccessTokenSet) {
-        logger.info(typeof cachedAccessTokenSet)
-        logger.info(Object.getOwnPropertyNames(cachedAccessTokenSet))
-    }
+    const cachedAccessTokenSet = session[`${servicename}_tokenset`]
     if (cachedAccessTokenSet && !cachedAccessTokenSet.expired()) {
         logger.info(`Using cached token for ${servicename}`)
         return Promise.resolve(cachedAccessTokenSet.access_token)
@@ -75,8 +71,8 @@ export const exchangeToken = async (session, servicename) => {
         audience: appConfig.targetAudience,
         subject_token: session.tokens.access_token
     }, additionalClaims).then(tokenSet => {
-        logger.info(`Retrieved new token for ${servicename}`)
-        session[`${servicename}_accesstoken`] = new TokenSet(tokenSet)
+        logger.info(`Retrieved new token for ${servicename}, ${typeof tokenSet}, ${tokenSet instanceof TokenSet}`)
+        session[`${servicename}_tokenset`] = new TokenSet(tokenSet)
         return Promise.resolve(tokenSet.access_token)
     }).catch(err => {
         logger.error(`Error while exchanging token: ${err}`)
