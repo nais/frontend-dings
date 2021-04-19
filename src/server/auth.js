@@ -51,11 +51,13 @@ export const validateOidcCallback = async (req) => {
 }
 
 export const exchangeToken = async (session, servicename) => {
-    const cachedAccessTokenSet = session[`${servicename}_tokenset`]
-    logger.info(`From session: ${JSON.stringify(cachedAccessTokenSet).substring(0, 15)}`)
-    if (cachedAccessTokenSet && !cachedAccessTokenSet.expired()) {
-        logger.info(`Using cached token for ${servicename}`)
-        return Promise.resolve(cachedAccessTokenSet.access_token)
+    const cached = session[`${servicename}_tokenset`]
+    if (cached) {
+        const tokenSet = new TokenSet(cached);
+        if (!tokenSet.expired()) {
+            logger.info(`Using cached token for ${servicename}`)
+            return Promise.resolve(tokenSet.access_token)
+        }
     }
 
     // additional claims not set by openid-client
