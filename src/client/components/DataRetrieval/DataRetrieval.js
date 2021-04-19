@@ -8,7 +8,7 @@ const DataRetrieval = () => {
     const getData = () => {
         loadStuffFromApi()
             .then(stuff => {
-                setMyData(`from api: ${stuff.data}`)
+                setMyData(`from api @ ${Date.now()}: ${stuff.data}`)
             })
             .catch(err => {
                 setMyData(`${err}`)
