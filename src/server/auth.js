@@ -51,13 +51,10 @@ export const validateOidcCallback = async (req) => {
 }
 
 export const exchangeToken = async (session, servicename) => {
-    const cached = session[`${servicename}_tokenset`]
-    if (cached) {
-        const tokenSet = new TokenSet(cached);
-        if (!tokenSet.expired()) {
-            logger.info(`Using cached token for ${servicename}`)
-            return Promise.resolve(tokenSet.access_token)
-        }
+    const cachedToken = cachedTokenFrom(session, servicename)
+    if (cachedToken) {
+        logger.info(`Using cached token for ${servicename}`)
+        return Promise.resolve(cachedToken)
     }
 
     // additional claims not set by openid-client
@@ -124,6 +121,17 @@ const init = async () => {
     } catch (err) {
         return Promise.reject(err)
     }
+}
+
+const cachedTokenFrom = (session, servicename) => {
+    const raw = session[`${servicename}_tokenset`]
+    if (raw) {
+        const tokenSet = new TokenSet(raw);
+        if (!tokenSet.expired()) {
+            return tokenSet.access_token
+        }
+    }
+    return null;
 }
 
 
