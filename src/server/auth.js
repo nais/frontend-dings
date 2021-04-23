@@ -53,7 +53,7 @@ export const validateOidcCallback = async (req) => {
 export const exchangeToken = async (session, servicename) => {
     const cachedToken = cachedTokenFrom(session, servicename)
     if (cachedToken) {
-        logger.info(`Using cached token for ${servicename}`)
+        logger.debug(`Using cached token for ${servicename}`)
         return Promise.resolve(cachedToken)
     }
 
@@ -71,7 +71,7 @@ export const exchangeToken = async (session, servicename) => {
         audience: appConfig.targetAudience,
         subject_token: session.tokens.access_token
     }, additionalClaims).then(tokenSet => {
-        logger.info(`Retrieved new token for ${servicename}, ${typeof tokenSet}, ${tokenSet instanceof TokenSet}`)
+        logger.debug(`Retrieved new token for ${servicename}`)
         session[`${servicename}_tokenset`] = tokenSet
         return Promise.resolve(tokenSet.access_token)
     }).catch(err => {
