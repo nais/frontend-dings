@@ -70,7 +70,7 @@ export const exchangeToken = async (session, servicename) => {
         grant_type: 'urn:ietf:params:oauth:grant-type:token-exchange',
         client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
         subject_token_type: 'urn:ietf:params:oauth:token-type:jwt',
-        audience: appConfig.targetAudience,
+        //audience: appConfig.targetAudience,
         subject_token: session.tokens.access_token
     }, additionalClaims).then(tokenSet => {
         logger.debug(`Retrieved new token for ${servicename}`)
