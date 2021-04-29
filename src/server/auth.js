@@ -62,7 +62,7 @@ export const exchangeToken = async (session, servicename) => {
         clientAssertionPayload: {
             'nbf': Math.floor(Date.now() / 1000),
             // TokenX only allows a single audience
-            audience: tokenxMetadata.token_endpoint
+            audience: [ tokenxMetadata.token_endpoint ]
         }
     }
 
