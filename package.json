@@ -2,14 +2,15 @@
   "name": "frontend-dings",
   "version": "1.0.0",
   "description": "Demoapp that uses TokenX",
+  "main": "index.js",
   "type": "module",
   "scripts": {
     "dev-client": "NODE_ENV=development $(npm bin)/parcel src/client/index.html",
     "test-client": "$(npm bin)/jest --testPathPattern=src/client",
-    "build-client": "NODE_ENV=production $(npm bin)/rimraf dist/client && npm run test-client && $(npm bin)/parcel build --no-source-maps --no-scope-hoist --target client --dist-dir dist/client src/client/index.html",
+    "build-client": "NODE_ENV=production $(npm bin)/rimraf dist/client && npm run test-client && $(npm bin)/parcel build --no-source-maps -d dist/client src/client/index.html",
     "dev-server": "NODE_ENV=development node src/server/index.js",
     "test-server": "NODE_ENV=development $(npm bin)/jest --testPathPattern=src/server",
-    "build-server": "NODE_ENV=production $(npm bin)/rimraf dist/server && npm run test-server && $(npm bin)/parcel build --no-source-maps --no-scope-hoist --target server --dist-dir dist/server src/server/index.js",
+    "build-server": "NODE_ENV=production $(npm bin)/rimraf dist/server && npm run test-server && $(npm bin)/parcel build --no-source-maps --target node -d dist/server src/server/index.js",
     "test": "npm run test-client && npm run test-server"
   },
   "author": "https://nais.io/",
@@ -17,7 +18,7 @@
   "dependencies": {
     "body-parser": "^1.19.0",
     "connect-redis": "^5.0.0",
-    "cssnano": "^5.0.4",
+    "cssnano": "^4.1.11",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-rate-limit": "^5.1.3",
@@ -38,20 +39,10 @@
     "@babel/preset-react": "^7.10.4",
     "@types/react": "^16.9.50",
     "jest": "^26.4.2",
-    "parcel": "^2.0.0-beta.2",
+    "parcel-bundler": "^1.12.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-hot-loader": "^4.13.0",
     "rimraf": "^3.0.2"
-  },
-  "client": "dist/client/index.html",
-  "server": "dist/server/index.js",
-  "targets": {
-    "client": {
-      "context": "browser"
-    },
-    "server": {
-      "context": "node"
-    }
   }
 }
