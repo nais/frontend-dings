@@ -49,3 +49,4 @@ dist
 .cache
 .env
 .DS_Store
+.parcel-cache
