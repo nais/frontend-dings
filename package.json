@@ -6,10 +6,10 @@
   "scripts": {
     "dev-client": "NODE_ENV=development $(npm bin)/parcel src/client/index.html",
     "test-client": "$(npm bin)/jest --testPathPattern=src/client",
-    "build-client": "NODE_ENV=production $(npm bin)/rimraf dist/client && npm run test-client && $(npm bin)/parcel build --no-source-maps --target client --dist-dir dist/client src/client/index.html",
+    "build-client": "NODE_ENV=production $(npm bin)/rimraf dist/client && npm run test-client && $(npm bin)/parcel build --no-source-maps --no-scope-hoist --target client --dist-dir dist/client src/client/index.html",
     "dev-server": "NODE_ENV=development node src/server/index.js",
     "test-server": "NODE_ENV=development $(npm bin)/jest --testPathPattern=src/server",
-    "build-server": "NODE_ENV=production $(npm bin)/rimraf dist/server && npm run test-server && $(npm bin)/parcel build --no-source-maps --target server --dist-dir dist/server src/server/index.js",
+    "build-server": "NODE_ENV=production $(npm bin)/rimraf dist/server && npm run test-server && $(npm bin)/parcel build --no-source-maps --no-scope-hoist --target server --dist-dir dist/server src/server/index.js",
     "test": "npm run test-client && npm run test-server"
   },
   "author": "https://nais.io/",
